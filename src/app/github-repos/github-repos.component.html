@@ -1,0 +1,26 @@
+<!-- src/app/github-repos/github-repos.component.html -->
+<app-header [profilePhotoUrl]="profilePhotoUrl"></app-header>
+
+<div class="container">
+  <div class="center-box">
+    <input [(ngModel)]="username" placeholder="Enter GitHub Username" class="p-2 border mb-2" />
+    <button (click)="loadRepositories()" class="p-2 bg-blue-500 text-white">Load Repositories</button>
+
+    <div *ngIf="loading" class="loader"></div> <!-- Loader here -->
+
+    <div *ngIf="!loading">
+      <div *ngFor="let repo of repositories" class="border p-2 mb-2" (click)="openRepoInNewTab(repo.html_url)">
+        <h3>{{ repo.name }}</h3>
+        <p>{{ repo.description }}</p>
+        <a [href]="repo.html_url" target="_blank">View on GitHub</a>
+      </div>
+    </div>
+
+    <!-- Display page numbers -->
+    <div class="pagination">
+      <button *ngFor="let pageNumber of getPageNumbers()" (click)="setPage(pageNumber)">
+        {{ pageNumber }}
+      </button>
+    </div>
+  </div>
+</div>

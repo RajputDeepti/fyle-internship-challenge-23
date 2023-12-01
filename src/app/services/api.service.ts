@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +10,28 @@ import { tap, throwError } from 'rxjs';
 export class ApiService {
 
   constructor(
-    private httpClient: HttpClient
+    private http: HttpClient
   ) { }
 
-  getUser(githubUsername: string) {
-    return this.httpClient.get(`https://api.github.com/users/${githubUsername}`);
+  private apiUrl = 'https://api.github.com';
+
+  getUserRepos(username: string, page: number, perPage: number): Observable<any[]> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
+
+    return this.http
+      .get<any[]>(`${this.apiUrl}/users/${username}/repos`, { params, observe: 'response' })
+      .pipe(map((response: HttpResponse<any[]>) => response.body || []));
   }
 
-  // implement getRepos method by referring to the documentation. Add proper types for the return type and params 
+  getUserProfilePhoto(username: string): Observable<string> {
+    return this.http.get(`${this.apiUrl}/users/${username}`).pipe(map((user: any) => user.avatar_url));
+  }
+
+  getTotalReposCount(username: string): Observable<number> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}/users/${username}/repos`, { params: new HttpParams(), observe: 'response' })
+      .pipe(map((response: HttpResponse<any[]>) => Number(response.headers.get('X-Total-Count')) || 0));
+  }
 }

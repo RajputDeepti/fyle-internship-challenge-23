@@ -1,0 +1,15 @@
+/* src/app/pagination/pagination.component.scss */
+.pagination {
+    display: flex;
+    margin-top: 10px;
+  
+    button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      background-color: #e2e8f0; /* Adjust color as needed */
+      border: 1px solid #cbd5e0; /* Adjust color as needed */
+      border-radius: 4px;
+    }
+  }
+  
