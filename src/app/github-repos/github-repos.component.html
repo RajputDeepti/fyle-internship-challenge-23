@@ -1,26 +1,48 @@
-<!-- src/app/github-repos/github-repos.component.html -->
-<app-header [profilePhotoUrl]="profilePhotoUrl"></app-header>
 
-<div class="container">
-  <div class="center-box">
-    <input [(ngModel)]="username" placeholder="Enter GitHub Username" class="p-2 border mb-2" />
-    <button (click)="loadRepositories()" class="p-2 bg-blue-500 text-white">Load Repositories</button>
+<div class="container mx-auto px-4 py-3">
+  <div class="center-box flex flex-col items-center">
+    <input [(ngModel)]="username" (input)="searchTerms.next(username); loading = true" placeholder="Enter GitHub Username" class="p-2 border mb-2 rounded shadow" />
+  </div>
 
-    <div *ngIf="loading" class="loader"></div> <!-- Loader here -->
-
-    <div *ngIf="!loading">
-      <div *ngFor="let repo of repositories" class="border p-2 mb-2" (click)="openRepoInNewTab(repo.html_url)">
-        <h3>{{ repo.name }}</h3>
-        <p>{{ repo.description }}</p>
-        <a [href]="repo.html_url" target="_blank">View on GitHub</a>
+  <div *ngIf="loading">
+    <div class="grid grid-cols-2 gap-4">
+      <div *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="border p-2 rounded shadow">
+        <div class="h-20 bg-gray-300 animate-pulse"></div>
+        <div class="space-y-2 mt-2">
+          <div class="h-4 bg-gray-300 animate-pulse"></div>
+          <div class="h-4 bg-gray-300 animate-pulse"></div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Display page numbers -->
-    <div class="pagination">
-      <button *ngFor="let pageNumber of getPageNumbers()" (click)="setPage(pageNumber)">
-        {{ pageNumber }}
-      </button>
+  <div *ngIf="!loading">
+    <div class="grid grid-cols-2 gap-4">
+      <div *ngFor="let repo of repositories" class="border p-2 rounded shadow" (click)="openRepoInNewTab(repo.html_url)">
+        <h3 class="text-xl font-bold">{{ repo.name }}</h3>
+        <p class="text-gray-600">{{ repo.description }}</p>
+        <a [href]="repo.html_url" target="_blank" class="text-blue-500 hover:underline">View on GitHub</a>
+      </div>
     </div>
   </div>
+  
+  <div class="flex justify-center space-x-2 mt-4">
+    <button (click)="prevPage()" [disabled]="page === 1" class="p-2 bg-blue-500 text-white rounded shadow hover:bg-blue-700">
+      Prev
+    </button>
+
+    <ng-container *ngFor="let pageNumber of getPageNumbers()">
+      <button *ngIf="pageNumber === '...'" class="p-2 bg-white text-black rounded shadow" disabled>
+        {{ pageNumber }}
+      </button>
+      <button *ngIf="pageNumber !== '...'" (click)="setPage(+pageNumber)" [class.bg-blue-500]="pageNumber === page" [class.text-white]="pageNumber === page" [class.bg-white]="pageNumber !== page" [class.text-black]="pageNumber !== page" class="p-2 rounded shadow hover:bg-blue-700 hover:text-white">
+        {{ pageNumber }}
+      </button>
+    </ng-container>
+
+    <button (click)="nextPage()" [disabled]="page === totalPages" class="p-2 bg-blue-500 text-white rounded shadow hover:bg-blue-700">
+      Next
+    </button>
+  </div>
+
 </div>
