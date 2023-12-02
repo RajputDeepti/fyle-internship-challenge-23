@@ -1,4 +1,3 @@
-// src/app/github-repos/github-repos.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Subject } from 'rxjs';
@@ -16,7 +15,6 @@ export class GithubReposComponent implements OnInit {
   loading: boolean = false;
   searchTerms = new Subject<string>();
 
-  // Pagination variables
   page: number = 1;
   perPage: number = 10;
   totalPages: number = 0;
@@ -24,7 +22,6 @@ export class GithubReposComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Load repositories and calculate total pages on component initialization
     this.searchTerms.pipe(debounceTime(3000), distinctUntilChanged()).subscribe((username) => {
 
       if(!username) {
@@ -63,11 +60,6 @@ export class GithubReposComponent implements OnInit {
   openRepoInNewTab(html_url: string): void {
     window.open(html_url, '_blank');
   }
-
-  // Getter for page numbers
-  // getPageNumbers(): number[] {
-  //   return Array.from({ length: this.totalPages }, (_, index) => index + 1);
-  // }
 
   prevPage(): void {
     if (this.page > 1) {

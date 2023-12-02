@@ -13,17 +13,8 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  private apiUrl = 'https://api.github.com';
+  public apiUrl = 'https://api.github.com';
 
-  // getUserRepos(username: string, page: number, perPage: number): Observable<any[]> {
-  //   const params = new HttpParams()
-  //     .set('page', page.toString())
-  //     .set('per_page', perPage.toString());
-
-  //   return this.http
-  //     .get<any[]>(`${this.apiUrl}/users/${username}/repos`, { params, observe: 'response' })
-  //     .pipe(map((response: HttpResponse<any[]>) => response.body || []));
-  // }
 
   getUserRepos(username: string, page: number, perPage: number): Observable<{ body: any[], totalPages: number | null }> {
     const params = new HttpParams()

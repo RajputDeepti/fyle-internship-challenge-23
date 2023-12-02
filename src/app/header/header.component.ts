@@ -1,4 +1,3 @@
-// src/app/header/header.component.ts
 import { Component, Input } from '@angular/core';
 
 @Component({
