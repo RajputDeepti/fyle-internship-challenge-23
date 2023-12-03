@@ -3,6 +3,12 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GithubReposComponent } from './github-repos.component';
 import { ApiService } from '../services/api.service';
 import { of } from 'rxjs';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
+import { throwError } from 'rxjs';
+
+
+
 
 describe('GithubReposComponent', () => {
   let component: GithubReposComponent;
@@ -13,7 +19,9 @@ describe('GithubReposComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [GithubReposComponent],
-        imports: [HttpClientTestingModule],
+        imports: [HttpClientTestingModule,
+        MatPaginatorModule,
+      FormsModule],
         providers: [ApiService],
       }).compileComponents();
     })
@@ -100,5 +108,23 @@ describe('GithubReposComponent', () => {
     expect(component.repositories.length).toEqual(2);
     expect(component.totalPages).toEqual(3);
   });
+
+  it('should handle an error when loading repositories', () => {
+    const getUserReposSpy = spyOn(apiService, 'getUserRepos').and.returnValue(
+      throwError('An error occurred')
+    );
+  
+    component.loadRepositories('testuser');
+  
+    expect(component.loading).toBeTrue();
+    expect(getUserReposSpy).toHaveBeenCalledWith('testuser', 1, 10);
+  
+    fixture.detectChanges();
+  
+    expect(component.loading).toBeFalse();
+    expect(component.repositories.length).toEqual(0);
+    expect(component.totalPages).toEqual(0);
+  });
+  
 });
 
